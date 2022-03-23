@@ -20,20 +20,20 @@
     <u-cell-group>
       <u-cell icon="setting-fill" size="large" title="个人信息" isLink @click="show = true"></u-cell>
       <u-cell icon="rmb-circle" size="large" title="所有订单" isLink @click="$u.route('pages/order/index')"></u-cell>
-      <u-cell icon="star" size="large" title="商品收藏" isLink @click="$u.route('pages/profile/collection')"></u-cell>
-      <u-cell icon="map" size="large" title="收货地址" isLink @click="$u.route('pages/profile/address')"></u-cell>
+      <u-cell icon="star" size="large" title="商品收藏" isLink @click="$u.toast('待开发')"></u-cell>
+      <u-cell icon="map" size="large" title="收货地址" isLink @click="$u.toast('待开发')"></u-cell>
       <u-cell icon="reload" size="large" title="退出登录" isLink @click="showLogout = true"></u-cell>
     </u-cell-group>
 
     <!-- 个人信息操作框 -->
-    <u-popup :show="show" @close="show = false" mode="center">
-      <view class="userinfo-dialog">
+    <u-popup :show="show" @close="show = false" mode="bottom" closeable safeAreaInsetBottom>
+      <view class="user-dialog">
         <u--form labelPosition="left" :model="userInfo">
-          <u-form-item label="姓名" prop="userInfo.name" borderBottom ref="item1">
-            <u--input v-model="userInfo.uname" :placeholder="userInfo.name" border="none"></u--input>
+          <u-form-item label="姓名" prop="userInfo.nickname" borderBottom ref="item1">
+            <u--input v-model="userInfo.nickname" border="none"></u--input>
           </u-form-item>
         </u--form>
-        <u-button type="primary" text="确定" @click="editUsername"></u-button>
+        <u-button type="primary" text="确定" @click="updateUserName"></u-button>
       </view>
     </u-popup>
     <!-- 退出提示框 -->
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { upload } from '@/api'
+import { upload, updateUserInfo } from '@/api'
 export default {
   data() {
     return {
@@ -67,16 +67,26 @@ export default {
     },
     // 图片上传
     async afterRead(event) {
-      let list = [].concat(event.file)
-      console.log(event.file)
-      const formData = new FormData()
-      formData.append('file', event.file)
-      const res = await upload(formData)
+      // console.log(event.file)
+      // const formData = new FormData('file', event.file)
+      // uni.uploadFile({
+      //   url: 'http://localhost:8888/users/upload', //仅为示例，非真实的接口地址
+      //   files: formData,
+      //   fileType: event.file,
+      //   success: uploadFileRes => {
+      //     console.log(uploadFileRes.data)
+      //   }
+      // })
+      // const res = await upload({ file: list[0].url })
       // this.userInfo.avatar_url = list[0].url
       // const res = await userUpdateAvatar({ avatar: list[0].url })
     },
-    async editUsername() {
-      await userInfoUpdate({ name: this.userInfo.uname })
+    async updateUserName() {
+      const res = await updateUserInfo({ nickname: this.userInfo.nickname })
+      if (res) {
+        uni.setStorageSync('userInfo', JSON.stringify(res))
+      }
+
       this.show = false
     }
   },
@@ -115,12 +125,9 @@ export default {
   }
 }
 
-.userinfo-dialog {
-  width: 500rpx;
-  padding: 20rpx;
-
+.user-dialog {
   .u-button {
-    margin-top: 30rpx;
+    margin-bottom: 100rpx;
   }
 }
 </style>

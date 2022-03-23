@@ -7,7 +7,7 @@ const { auth, generateToken } = require('../middleware/auth')
 
 const path = require('path')
 
-const register = async (ctx) => {
+const register = async ctx => {
   const { username, password } = ctx.request.body
   const res = await User.count({ where: { username } })
   if (res === 0) {
@@ -22,7 +22,7 @@ const register = async (ctx) => {
   }
 }
 
-const getUerInfo = async (ctx) => {
+const getUerInfo = async ctx => {
   const where = {}
   const { id, username, email, password } = ctx.request.body
   id && Object.assign(where, { id })
@@ -52,7 +52,7 @@ const getUerInfo = async (ctx) => {
   }
 }
 
-const updateById = async (ctx) => {
+const updateById = async ctx => {
   const { id } = ctx.state.user
   const password = ctx.request.body
   const [res] = await User.update(password, { where: { id } })
@@ -66,8 +66,8 @@ const updateById = async (ctx) => {
   }
 }
 const upload = async (ctx, next) => {
+  console.log(ctx.request.files)
   const { file } = ctx.request.files
-  console.log(file)
   const fileTypes = ['image/jpeg', 'image/png']
   if (file) {
     if (!fileTypes.includes(file.type)) {
@@ -95,6 +95,6 @@ router.patch('/', auth, cryptPassword, updateById)
 router.post('/login', getUerInfo)
 
 // 上传
-router.post('/upload', auth, upload)
+router.post('/upload', upload)
 
 module.exports = router

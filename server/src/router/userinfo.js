@@ -1,6 +1,7 @@
 const Router = require('koa-router')
 const router = new Router({ prefix: '/userinfo' })
 const { auth } = require('../middleware/auth')
+const UserInfo = require('../modules/userInfo')
 const updateUserInfo = async ctx => {
   const { id } = ctx.state.user
   const content = ctx.request.body
@@ -16,5 +17,5 @@ const updateUserInfo = async ctx => {
     ctx.throw(400, '修改失败')
   }
 }
-router.post('/userInfo', auth, updateUserInfo)
+router.post('/', auth, updateUserInfo)
 module.exports = router

@@ -3,6 +3,7 @@ const Koa = require('koa')
 const cors = require('koa-cors')
 const app = new Koa()
 
+// 前端跨域
 app.use(cors())
 // koabody配置项
 const KoaBody = require('koa-body')
@@ -28,7 +29,7 @@ app.use(parameter(app))
 const error = require('koa-json-error')
 app.use(
   error({
-    format: (err) => {
+    format: err => {
       const { status, message, stack } = err
       return { code: status, message, result: stack }
     },

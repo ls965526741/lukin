@@ -3,8 +3,9 @@ module.exports = (vm) => {
   // 初始化请求配置
   uni.$u.http.setConfig((config) => {
     /* config 为默认全局配置*/
-    config.baseURL = 'http://localhost:8888' /* 根域名 */
-    // config.baseURL = 'https://lazy-bulldog-34.loca.lt' /* 根域名 */
+    // config.baseURL = 'http://localhost:8888' // 后端已经解决跨域问题
+    config.baseURL = '/api' // 后端如果没有跨域，需要配置vue.config.js
+    // config.baseURL = 'https://lazy-bulldog-34.loca.lt' // 上线接口
     return config
   })
 
